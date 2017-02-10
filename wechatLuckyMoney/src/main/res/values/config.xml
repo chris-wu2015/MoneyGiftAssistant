@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail">红包详情</string>
+    <string name="better_luck">手慢了</string>
+    <string name="expires">已超过24小时</string>
+    <string name="view_self">查看红包</string>
+    <string name="view_other">领取红包</string>
+    <string name="wechat_notification_tip">[微信红包]</string>
+    <string name="qq_notification_tip">[QQ红包]</string>
+</resources>

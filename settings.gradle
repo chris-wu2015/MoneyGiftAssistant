@@ -1,1 +1,1 @@
-include ':moneyGiftAssistant'
+include ':moneyGiftAssistant', ':wechatLuckyMoney'

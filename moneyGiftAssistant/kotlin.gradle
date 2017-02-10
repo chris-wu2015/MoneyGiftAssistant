@@ -1,0 +1,10 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android{
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
