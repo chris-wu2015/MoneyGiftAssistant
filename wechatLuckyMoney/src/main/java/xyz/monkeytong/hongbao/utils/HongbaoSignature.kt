@@ -7,9 +7,9 @@ import android.view.accessibility.AccessibilityNodeInfo
  * Created by Zhongyi on 1/21/16.
  */
 class HongbaoSignature {
-    var sender: String
-    var content: String
-    var time: String
+    var sender: String = ""
+    var content: String = ""
+    var time: String = ""
     var contentDescription = ""
     var commentString: String? = null
     var others: Boolean = false
@@ -58,10 +58,10 @@ class HongbaoSignature {
         return this.getSignature(this.sender, this.content, this.time)
     }
 
-    private fun getSignature(vararg strings: String): String? {
+    private fun getSignature(vararg strings: String): String {
         var signature = ""
         for (str in strings) {
-            if (str == null) return null
+            if (str == null) return ""
             signature += str + "|"
         }
 
