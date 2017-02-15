@@ -46,7 +46,6 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
-        CrashReport.testJavaCrash()
     }
 
     private fun explicitlyLoadPreferences() {
