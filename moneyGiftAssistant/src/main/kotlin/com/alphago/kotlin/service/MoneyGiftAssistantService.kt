@@ -130,7 +130,7 @@ class MoneyGiftAssistantService : AccessibilityService() {
         when (info.childCount) {
             0 -> {
                 if (Button::class.java.name == info.className && info.isClickable &&
-                        info.support(18, { viewIdResourceName.isNullOrEmpty().not() }) ?: true) {
+                        info.support(18, { viewIdResourceName.isNullOrEmpty().not() })) {
                     performClick(info)
                 } else {
                     val parent = info.parent

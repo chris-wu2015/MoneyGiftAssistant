@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="detail">红包详情</string>
-    <string name="better_luck">手慢了</string>
-    <string name="expires">已超过24小时</string>
-    <string name="view_self">查看红包</string>
-    <string name="view_other">领取红包</string>
-    <string name="wechat_notification_tip">[微信红包]</string>
-    <string name="qq_notification_tip">[QQ红包]</string>
+    <string name="wechat_details">红包详情</string>
+    <string name="wechat_package">com.tencent.mm</string>
+    <string name="wechat_notification">[微信红包]</string>
+    <string name="wechat_better_luck">手慢了</string>
+    <string name="wechat_expires">已超过24小时</string>
+    <string name="wechat_view_other">领取红包</string>
+    <string name="wechat_view_self">查看红包</string>
+    <string name="wechat_chatting_ui">ChattingUI</string>
+    <string name="wechat_detail_ui">LuckyMoneyDetailUI</string>
+    <string name="wechat_general_ui">LauncherUI</string>
+    <string name="wechat_receiver_ui">LuckyMoneyReceiveUI</string>
+
+    <string name="qq_details">红包记录</string>
+    <string name="qq_package">com.tencent.mobileqq</string>
+    <string name="qq_notification">[QQ红包]</string>
+    <string name="qq_better_luck">来晚一步，领完啦~</string>
+    <string name="qq_expires">过期</string>
+    <string name="qq_view_other">点击拆开</string>
+    <string name="qq_password_packet">口令红包</string>
+    <string name="qq_input_password">点击输入口令</string>
+    <string name="qq_view_self">查看详情</string>
+    <string name="qq_chatting_ui">SplashActivity</string>
+    <string name="qq_detail_ui">QWalletPluginProxyActivity</string>
+    <string name="qq_general_ui">SplashActivity</string>
+    <string name="qq_receiver_ui">QWalletPluginProxyActivity</string>
 </resources>

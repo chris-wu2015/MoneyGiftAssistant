@@ -1,4 +1,4 @@
-package xyz.monkeytong.hongbao.fragments
+package com.alphago.moneypacket.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.widget.Toast
-import xyz.monkeytong.hongbao.R
+import com.alphago.moneypacket.R
 
 /**
  * Created by Zhongyi on 2/4/16.

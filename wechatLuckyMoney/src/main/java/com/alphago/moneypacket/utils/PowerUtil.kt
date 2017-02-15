@@ -1,4 +1,4 @@
-package xyz.monkeytong.hongbao.utils
+package com.alphago.moneypacket.utils
 
 import android.app.KeyguardManager
 import android.content.Context

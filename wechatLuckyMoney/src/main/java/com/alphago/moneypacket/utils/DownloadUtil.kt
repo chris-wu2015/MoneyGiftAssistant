@@ -1,4 +1,4 @@
-package xyz.monkeytong.hongbao.utils
+package com.alphago.moneypacket.utils
 
 import android.app.DownloadManager
 import android.content.Context

@@ -1,6 +1,5 @@
-package xyz.monkeytong.hongbao.activities
+package com.alphago.moneypacket.activities
 
-import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
@@ -10,16 +9,17 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.tencent.bugly.Bugly
-import xyz.monkeytong.hongbao.R
-import xyz.monkeytong.hongbao.utils.ConnectivityUtil
-import xyz.monkeytong.hongbao.utils.UpdateTask
+import com.tencent.bugly.crashreport.CrashReport
+import com.alphago.moneypacket.BuildConfig
+import com.alphago.moneypacket.R
+
+//import com.alphago.moneypacket.utils.UpdateTask
 
 
 class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeListener {
@@ -33,7 +33,7 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //CrashReport.initCrashReport(getApplicationContext(), "900019352", false);
-        Bugly.init(applicationContext, "900019352", false)
+        Bugly.init(applicationContext, "cbaedd81ff", !BuildConfig.DEBUG)
         setContentView(R.layout.activity_main)
         pluginStatusText = findViewById(R.id.layout_control_accessibility_text) as TextView
         pluginStatusIcon = findViewById(R.id.layout_control_accessibility_icon) as ImageView
@@ -46,6 +46,7 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
+        CrashReport.testJavaCrash()
     }
 
     private fun explicitlyLoadPreferences() {
@@ -79,8 +80,8 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
 
         updateServiceStatus()
         // Check for update when WIFI is connected or on first time.
-        if (ConnectivityUtil.isWifi(this) || UpdateTask.count == 0)
-            UpdateTask(this, false).update()
+//        if (ConnectivityUtil.isWifi(this) || UpdateTask.count == 0)
+//            UpdateTask(this, false).update()
     }
 
     override fun onDestroy() {
@@ -99,22 +100,6 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
             e.printStackTrace()
         }
 
-    }
-
-    fun openGitHub(view: View) {
-        val webViewIntent = Intent(this, WebViewActivity::class.java)
-        webViewIntent.putExtra("title", getString(R.string.webview_github_title))
-        webViewIntent.putExtra("url", "https://github.com/geeeeeeeeek/WeChatLuckyMoney")
-        startActivity(webViewIntent)
-    }
-
-    fun openUber(view: View) {
-        val webViewIntent = Intent(this, WebViewActivity::class.java)
-        webViewIntent.putExtra("title", getString(R.string.webview_uber_title))
-        val couponList = arrayOf("https://dc.tt/oTLtXH2BHsD", "https://dc.tt/ozFJHDnfLky")
-        val index = (Math.random() * 2).toInt()
-        webViewIntent.putExtra("url", couponList[index])
-        startActivity(webViewIntent)
     }
 
     fun openSettings(view: View) {
@@ -149,7 +134,9 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
      */
     private val isServiceEnabled: Boolean
         get() {
-            val accessibilityServices = accessibilityManager!!.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-            return accessibilityServices.any { it.id == packageName + "/.services.HongbaoService" }
+//            val accessibilityServices = accessibilityManager!!.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+//            return accessibilityServices.any { it.id == packageName + "/.services.HongBaoService" }
+            val accessibilityEnable = Settings.Secure.getInt(contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+            return accessibilityEnable == 1
         }
 }

@@ -4,12 +4,7 @@
               android:layout_height="wrap_content"
               android:paddingLeft="16dp"
               android:paddingRight="?android:attr/scrollbarSize">
-    <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1">
+
 
         <TextView android:id="@+android:id/title"
                   android:layout_width="wrap_content"
@@ -19,5 +14,4 @@
                   android:textColor="#E46C62"
                   android:textSize="14sp"
                   android:fadingEdge="horizontal"/>
-    </RelativeLayout>
 </LinearLayout>

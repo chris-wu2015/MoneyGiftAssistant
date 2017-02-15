@@ -1,4 +1,4 @@
-package xyz.monkeytong.hongbao.activities
+package com.alphago.moneypacket.activities
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -21,10 +21,10 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import org.w3c.dom.Text
-import xyz.monkeytong.hongbao.R
-import xyz.monkeytong.hongbao.fragments.CommentSettingsFragment
-import xyz.monkeytong.hongbao.fragments.GeneralSettingsFragment
-import xyz.monkeytong.hongbao.utils.UpdateTask
+import com.alphago.moneypacket.R
+import com.alphago.moneypacket.fragments.CommentSettingsFragment
+import com.alphago.moneypacket.fragments.GeneralSettingsFragment
+//import com.alphago.moneypacket.utils.UpdateTask
 
 /**
  * Created by Zhongyi on 1/19/16.

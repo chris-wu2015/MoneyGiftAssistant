@@ -1,4 +1,4 @@
-package xyz.monkeytong.hongbao.utils
+package com.alphago.moneypacket.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

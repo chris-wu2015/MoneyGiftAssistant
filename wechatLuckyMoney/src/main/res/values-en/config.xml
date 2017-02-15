@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="detail">Details</string>
-    <string name="better_luck">Better luck next time!</string>
+    <string name="wechat_details">Details</string>
+    <string name="wechat_better_luck">Better luck next time!</string>
 </resources>
