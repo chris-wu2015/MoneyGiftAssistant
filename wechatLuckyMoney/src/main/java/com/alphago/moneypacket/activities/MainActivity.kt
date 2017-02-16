@@ -1,26 +1,26 @@
 package com.alphago.moneypacket.activities
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
+import android.support.v4.app.NotificationManagerCompat
 import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.tencent.bugly.Bugly
-import com.tencent.bugly.crashreport.CrashReport
+import com.alphago.extensions.dialog
 import com.alphago.moneypacket.BuildConfig
 import com.alphago.moneypacket.R
-
-//import com.alphago.moneypacket.utils.UpdateTask
-
+import com.tencent.bugly.Bugly
 
 class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeListener {
 
@@ -37,6 +37,7 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         setContentView(R.layout.activity_main)
         pluginStatusText = findViewById(R.id.layout_control_accessibility_text) as TextView
         pluginStatusIcon = findViewById(R.id.layout_control_accessibility_icon) as ImageView
+        (findViewById(R.id.textView5) as TextView).text = BuildConfig.VERSION_NAME
 
         handleMaterialStatusBar()
 
@@ -46,6 +47,7 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
+
     }
 
     private fun explicitlyLoadPreferences() {
@@ -78,9 +80,6 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         super.onResume()
 
         updateServiceStatus()
-        // Check for update when WIFI is connected or on first time.
-//        if (ConnectivityUtil.isWifi(this) || UpdateTask.count == 0)
-//            UpdateTask(this, false).update()
     }
 
     override fun onDestroy() {
@@ -90,6 +89,40 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
     }
 
     fun openAccessibility(view: View) {
+        if (queryNotificationListenerState().not()) {
+            dialog {
+                title(R.string.app_name)
+                message(R.string.register_notification_listener)
+                positiveButton(R.string.go_right_now) {
+                    try {
+                        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                    } catch (e: Exception) {
+                        startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+                    }
+                    dismiss()
+                }
+                negativeButton(R.string.dont_need) {
+                    openSysAccessibilitySetting()
+                    dismiss()
+                }
+            }
+                    ?.show()
+            return
+        }
+        openSysAccessibilitySetting()
+    }
+
+    private fun queryNotificationListenerState(): Boolean {
+        try {
+            val packages = NotificationManagerCompat.getEnabledListenerPackages(this)
+            return packages.any { packageName == it }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    private fun openSysAccessibilitySetting() {
         try {
             Toast.makeText(this, getString(R.string.turn_on_toast) + pluginStatusText!!.text, Toast.LENGTH_SHORT).show()
             val accessibleIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
@@ -98,7 +131,6 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
             Toast.makeText(this, getString(R.string.turn_on_error_toast), Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
-
     }
 
     fun openSettings(view: View) {
@@ -108,6 +140,27 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         startActivity(settingsIntent)
     }
 
+    fun checkNotificationEnable(v: View) {
+        try {
+            var tag = (v.tag as? Int) ?: 0
+            val uri = Uri.parse("package:" +
+                    if (tag == 0) {
+                        tag++
+                        getString(R.string.wechat_package)
+                    } else {
+                        tag--
+                        getString(R.string.qq_package)
+                    })
+            v.tag = tag
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    .setData(uri))
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            v.tag = 0
+        }
+    }
 
     override fun onAccessibilityStateChanged(enabled: Boolean) {
         updateServiceStatus()
@@ -133,9 +186,14 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
      */
     private val isServiceEnabled: Boolean
         get() {
-//            val accessibilityServices = accessibilityManager!!.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-//            return accessibilityServices.any { it.id == packageName + "/.services.HongBaoService" }
-            val accessibilityEnable = Settings.Secure.getInt(contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
-            return accessibilityEnable == 1
+            try {
+                val accessibilityEnable = Settings.Secure.getInt(contentResolver,
+                        Settings.Secure.ACCESSIBILITY_ENABLED)
+                return accessibilityEnable == 1
+            } catch (e: Exception) {
+                val accessibilityServices = accessibilityManager!!.
+                        getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+                return accessibilityServices.any { it.id == packageName + "/.services.HongBaoService" }
+            }
         }
 }

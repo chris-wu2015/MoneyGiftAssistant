@@ -125,4 +125,15 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textViewDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_control"
+        android:layout_margin="10dp"
+        android:onClick="checkNotificationEnable"
+        android:text="@string/app_description"
+        android:textColor="#858585"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 </RelativeLayout>

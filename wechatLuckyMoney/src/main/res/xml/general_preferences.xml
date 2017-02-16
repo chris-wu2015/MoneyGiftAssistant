@@ -39,6 +39,16 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:layout="@layout/preference_category"
+        android:title="@string/notification_listener">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/notification_listener"
+            android:layout="@layout/preference_checkbox"
+            android:summary="检测到红包服务未运行时及时提醒"
+            android:title="抢红包服务状态提醒" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:title="@string/labs">
         <CheckBoxPreference
             android:defaultValue="false"
