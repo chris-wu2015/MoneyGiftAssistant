@@ -27,12 +27,17 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationRankingUpdate(rankingMap: RankingMap?) {
         super.onNotificationRankingUpdate(rankingMap)
-        println("rankingMap=$rankingMap")
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
-        println("sbn=$sbn")
+        try {
+            if (packageName == sbn?.packageName) {
+                startForeground(0, sbn!!.notification)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         processServiceState()
     }
 

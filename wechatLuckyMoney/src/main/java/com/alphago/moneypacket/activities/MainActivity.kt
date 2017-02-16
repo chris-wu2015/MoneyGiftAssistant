@@ -3,6 +3,7 @@ package com.alphago.moneypacket.activities
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -47,7 +48,6 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
-
     }
 
     private fun explicitlyLoadPreferences() {

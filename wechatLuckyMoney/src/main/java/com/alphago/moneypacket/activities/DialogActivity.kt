@@ -38,7 +38,6 @@ class DialogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(FrameLayout(this))
         dialog.value?.show()
                 ?.setOnDismissListener {
                     finish()
