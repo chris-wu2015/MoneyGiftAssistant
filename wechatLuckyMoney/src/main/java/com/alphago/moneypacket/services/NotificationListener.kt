@@ -25,10 +25,6 @@ class NotificationListener : NotificationListenerService() {
 
     }
 
-    override fun onNotificationRankingUpdate(rankingMap: RankingMap?) {
-        super.onNotificationRankingUpdate(rankingMap)
-    }
-
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
         try {

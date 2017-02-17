@@ -3,9 +3,9 @@ package com.alphago.moneypacket.activities
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +21,7 @@ import android.widget.Toast
 import com.alphago.extensions.dialog
 import com.alphago.moneypacket.BuildConfig
 import com.alphago.moneypacket.R
+import com.alphago.moneypacket.receivers.Receivers
 import com.tencent.bugly.Bugly
 
 class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeListener {
@@ -48,6 +49,10 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
+        val receiver = Receivers()
+        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_BOOT_COMPLETED)
+        registerReceiver(receiver, filter)
     }
 
     private fun explicitlyLoadPreferences() {
@@ -110,6 +115,12 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
             return
         }
         openSysAccessibilitySetting()
+    }
+
+    fun showAppDetail(v: View) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                .setData(Uri.parse("package:" + packageName))
+        startActivity(intent)
     }
 
     private fun queryNotificationListenerState(): Boolean {

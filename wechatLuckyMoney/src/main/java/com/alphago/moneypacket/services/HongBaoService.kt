@@ -35,8 +35,14 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+
         watchFlagsFromPreference()
         showNotification()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        println("onStartCommand")
+        return super.onStartCommand(intent, flags, startId)
     }
 
     private fun showNotification() {
@@ -68,12 +74,6 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         println("onUnbind")
         cancelNotification()
         return super.onUnbind(intent)
-    }
-
-    override fun onLowMemory() {
-        println("onLowMemory")
-        cancelNotification()
-        super.onLowMemory()
     }
 
     override fun onTrimMemory(level: Int) {
