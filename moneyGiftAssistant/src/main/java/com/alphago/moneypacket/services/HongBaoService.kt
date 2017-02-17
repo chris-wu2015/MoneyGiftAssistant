@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.view.accessibility.AccessibilityEvent
 import com.alphago.moneypacket.R
 import com.alphago.moneypacket.utils.PowerUtil
@@ -102,6 +103,8 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
 
     override fun onDestroy() {
         this.powerUtil.handleWakeLock(false)
+        cancelNotification()
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(packageName))
         super.onDestroy()
     }
 

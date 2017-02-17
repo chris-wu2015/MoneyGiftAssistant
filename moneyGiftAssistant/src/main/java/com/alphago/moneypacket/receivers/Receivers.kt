@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v4.app.NotificationManagerCompat
 import com.alphago.moneypacket.services.NotificationListener
+import org.jetbrains.anko.newTask
 
 /**
  * @author Chris
@@ -24,5 +25,12 @@ class Receivers : BroadcastReceiver() {
                 .setComponentEnabledSetting(
                         ComponentName(context, NotificationListener::class.java),
                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
+
+        if (context.packageName == intent.action) {
+            context.startActivity(
+                    context.packageManager
+                            .getLaunchIntentForPackage(context.packageName)
+                            .newTask())
+        }
     }
 }
