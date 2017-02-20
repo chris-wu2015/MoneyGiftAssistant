@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,7 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.Light">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,9 +63,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_UNLOCKED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.SCREEN_ON" />
                 <action android:name="com.alphago.moneypacket" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.alphago.moneypacket.fileProvider"

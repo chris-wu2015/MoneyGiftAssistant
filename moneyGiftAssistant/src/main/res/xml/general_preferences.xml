@@ -42,7 +42,7 @@
         android:title="@string/notification_listener">
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/notification_listener"
+            android:key="@string/dont_show_again"
             android:layout="@layout/preference_checkbox"
             android:summary="检测到红包服务未运行时及时提醒"
             android:title="抢红包服务状态提醒" />

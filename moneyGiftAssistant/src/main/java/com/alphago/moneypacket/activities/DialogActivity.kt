@@ -27,7 +27,7 @@ class DialogActivity : AppCompatActivity() {
             neutralButton(R.string.dont_show_again) {
                 PreferenceManager.getDefaultSharedPreferences(ctx)
                         .edit()
-                        .putBoolean(getString(R.string.dont_show_again), true)
+                        .putBoolean(getString(R.string.dont_show_again), false)
                         .apply()
                 dismiss()
             }

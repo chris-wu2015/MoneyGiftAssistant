@@ -1,14 +1,17 @@
 package com.alphago.moneypacket.services
 
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import android.view.WindowManager
+import com.alphago.extensions.support
 import com.alphago.moneypacket.R
-import com.alphago.moneypacket.activities.DialogActivity
-import org.jetbrains.anko.newTask
 
 /**
  * @author Chris
@@ -18,6 +21,7 @@ import org.jetbrains.anko.newTask
 class NotificationListener : NotificationListenerService() {
     val az by lazy { getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager }
     val sp by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+    val handler by lazy { Handler(this.mainLooper) }
 
     override fun onListenerConnected() {
         super.onListenerConnected()
@@ -38,9 +42,32 @@ class NotificationListener : NotificationListenerService() {
     }
 
     private fun processServiceState() {
-        if (checkServiceState().not() && sp.getBoolean(
-                getString(R.string.dont_show_again), false).not()) {
-            startActivity(Intent(this, DialogActivity::class.java).newTask())
+        if (checkServiceState().not() && sp.getBoolean(getString(R.string.dont_show_again), true)) {
+            handler.post {
+                val dialog = AlertDialog.Builder(this, support(24,
+                        { android.R.style.Theme_Material_Light_Dialog_NoActionBar },
+                        { android.R.style.Theme_Holo_Light_Dialog_NoActionBar }))
+                        .setTitle(R.string.app_name)
+                        .setMessage(R.string.service_not_running)
+                        .setPositiveButton(R.string.go_right_now) { dialog, which ->
+                            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton(R.string.already_know) { dialog, which -> dialog.dismiss() }
+                        .setNeutralButton(R.string.dont_show_again) { dialog, which ->
+                            PreferenceManager.getDefaultSharedPreferences(this)
+                                    .edit()
+                                    .putBoolean(getString(R.string.dont_show_again), false)
+                                    .apply()
+                            dialog.dismiss()
+                        }
+                        .create()
+                dialog.window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT)
+                dialog.show()
+            }
+//            startActivity(Intent(this, DialogActivity::class.java)
+//                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
+//                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS))
         }
     }
 

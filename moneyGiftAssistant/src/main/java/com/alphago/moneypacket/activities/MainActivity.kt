@@ -2,7 +2,6 @@ package com.alphago.moneypacket.activities
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,6 +11,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
@@ -19,18 +19,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.alphago.extensions.dialog
+import com.alphago.extensions.support
 import com.alphago.moneypacket.BuildConfig
 import com.alphago.moneypacket.R
 import com.alphago.moneypacket.receivers.Receivers
 import com.tencent.bugly.Bugly
 
-class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeListener {
+class MainActivity : AppCompatActivity(), AccessibilityManager.AccessibilityStateChangeListener {
 
     //开关切换按钮
     private var pluginStatusText: TextView? = null
     private var pluginStatusIcon: ImageView? = null
     //AccessibilityService 管理
     private var accessibilityManager: AccessibilityManager? = null
+    private val receiver by lazy { Receivers() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +51,17 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
-        val receiver = Receivers()
-        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_BOOT_COMPLETED)
+        val filter = IntentFilter()
+        filter.support(24, { addAction(Intent.ACTION_USER_UNLOCKED) },
+                { addAction("android.intent.action.USER_UNLOCKED") })
+        filter.addAction(Intent.ACTION_SCREEN_ON)
         registerReceiver(receiver, filter)
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(Intent.ACTION_MAIN)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addCategory(Intent.CATEGORY_HOME))
     }
 
     private fun explicitlyLoadPreferences() {
@@ -90,6 +99,7 @@ class MainActivity : Activity(), AccessibilityManager.AccessibilityStateChangeLi
     override fun onDestroy() {
         //移除监听服务
         accessibilityManager!!.removeAccessibilityStateChangeListener(this)
+        unregisterReceiver(receiver)
         super.onDestroy()
     }
 

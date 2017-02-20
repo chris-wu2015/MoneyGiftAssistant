@@ -19,6 +19,12 @@ class CommentSettingsFragment : PreferenceFragment() {
     }
 
     private fun setPrefListeners() {
+//        val listenerEnable = findPreference(getString(R.string.dont_show_again))
+//        listenerEnable.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference->
+//            preference.
+//            true
+//        }
+
         val updatePref = findPreference("pref_comment_switch")
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             updatePref.isEnabled = false
