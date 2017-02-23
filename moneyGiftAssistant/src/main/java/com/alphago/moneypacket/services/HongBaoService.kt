@@ -1,20 +1,30 @@
 package com.alphago.moneypacket.services
 
 import android.accessibilityservice.AccessibilityService
+import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.os.Build
+import android.os.Handler
+import android.os.IBinder
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.accessibility.AccessibilityEvent
+import com.alphago.extensions.support
 import com.alphago.moneypacket.R
+import com.alphago.moneypacket.activities.KeepAliveActivity
+import com.alphago.moneypacket.config.Config
+import com.alphago.moneypacket.receivers.BroadcastCallback
 import com.alphago.moneypacket.utils.PowerUtil
+import com.alphago.moneypacket.utils.ScreenManager
 
 /**
  * @author Chris
@@ -36,18 +46,39 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-
         watchFlagsFromPreference()
         showNotification()
+
+        val broadcast = BroadcastCallback(Intent.ACTION_SCREEN_ON, Intent.ACTION_SCREEN_OFF) {
+            context, intent ->
+            println("HongBaoService.接收到广播:${intent.action}")
+            when (intent.action) {
+                Intent.ACTION_SCREEN_ON -> ScreenManager.finishActivity()
+                Intent.ACTION_SCREEN_OFF -> KeepAliveActivity.open(this)
+            }
+        }.register(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         println("onStartCommand")
-        return super.onStartCommand(intent, flags, startId)
+        return Service.START_REDELIVER_INTENT
     }
 
     private fun showNotification() {
-        val notification = NotificationCompat.Builder(this)
+        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        support(Build.VERSION_CODES.JELLY_BEAN_MR2, {
+            val notification = buildNotification().build()
+            nm.notify(Config.NOTIFICATION_ID, notification)
+            startForeground(Config.NOTIFICATION_ID, notification)
+            startService(Intent(this, InnerService::class.java))
+        }, {
+            nm.notify(Config.NOTIFICATION_ID, Notification())
+            startForeground(Config.NOTIFICATION_ID, Notification())
+        })
+    }
+
+    private fun buildNotification(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.app_description))
                 .setColor(Color.RED)
@@ -61,9 +92,6 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
                 .setShowWhen(true)
                 .setLocalOnly(true)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .build()
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(0, notification)
-        startForeground(0, notification)
     }
 
     private fun cancelNotification() {
@@ -112,5 +140,25 @@ class HongBaoService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         val watchOnLockFlag = sharedPreferences.getBoolean(IHongBaoProcessor.WATCH_ON_LOCK, false)
         this.powerUtil.handleWakeLock(watchOnLockFlag)
+    }
+
+    inner class InnerService : Service() {
+        override fun onBind(intent: Intent?): IBinder? {
+            return null
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val builder = buildNotification().build()
+            nm.notify(Config.NOTIFICATION_ID, builder)
+            startForeground(Config.NOTIFICATION_ID, builder)
+            Handler(mainLooper).postDelayed({
+
+                stopForeground(true)
+                nm.cancel(Config.NOTIFICATION_ID)
+                stopSelf()
+            }, 100)
+        }
     }
 }

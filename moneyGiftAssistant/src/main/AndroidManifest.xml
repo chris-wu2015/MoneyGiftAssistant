@@ -39,10 +39,16 @@
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".activities.KeepAliveActivity"
+            android:theme="@style/TranslucentStyle">
+
+        </activity>
 
         <service
             android:name=".services.HongBaoService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:process=":accessibility">
             <intent-filter android:priority="1000">
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -59,12 +65,29 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".receivers.Receivers">
+        <receiver
+            android:name=".receivers.Receivers"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.USER_UNLOCKED" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="com.alphago.moneypacket" />
             </intent-filter>
         </receiver>

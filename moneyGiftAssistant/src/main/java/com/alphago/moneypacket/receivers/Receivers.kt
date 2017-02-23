@@ -16,6 +16,7 @@ import org.jetbrains.anko.newTask
  */
 class Receivers : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        println("接收到广播：${intent.action}")
         println("listener=" + NotificationManagerCompat.getEnabledListenerPackages(context))
         context.packageManager
                 .setComponentEnabledSetting(
@@ -26,7 +27,7 @@ class Receivers : BroadcastReceiver() {
                         ComponentName(context, NotificationListener::class.java),
                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
 
-        if (context.packageName == intent.action) {
+        if (context.packageName == intent.action || Intent.ACTION_BOOT_COMPLETED == intent.action) {
             context.startActivity(
                     context.packageManager
                             .getLaunchIntentForPackage(context.packageName)

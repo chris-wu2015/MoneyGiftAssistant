@@ -1,15 +1,18 @@
 package com.alphago.moneypacket.activities
 
+import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity(), AccessibilityManager.AccessibilityStat
     private var pluginStatusIcon: ImageView? = null
     //AccessibilityService 管理
     private var accessibilityManager: AccessibilityManager? = null
-    private val receiver by lazy { Receivers() }
+//    private val receiver by lazy { Receivers() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +54,17 @@ class MainActivity : AppCompatActivity(), AccessibilityManager.AccessibilityStat
         accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         accessibilityManager!!.addAccessibilityStateChangeListener(this)
         updateServiceStatus()
-        val filter = IntentFilter()
-        filter.support(24, { addAction(Intent.ACTION_USER_UNLOCKED) },
-                { addAction("android.intent.action.USER_UNLOCKED") })
-        filter.addAction(Intent.ACTION_SCREEN_ON)
-        registerReceiver(receiver, filter)
+//        val filter = IntentFilter()
+//        filter.support(24, { addAction(Intent.ACTION_USER_UNLOCKED) },
+//                { addAction("android.intent.action.USER_UNLOCKED") })
+//        filter.addAction(Intent.ACTION_SCREEN_ON)
+//        registerReceiver(receiver, filter)
+
+        println(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) == PackageManager.PERMISSION_GRANTED)
     }
 
     override fun onBackPressed() {
         startActivity(Intent(Intent.ACTION_MAIN)
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 .addCategory(Intent.CATEGORY_HOME))
     }
 
@@ -99,7 +103,7 @@ class MainActivity : AppCompatActivity(), AccessibilityManager.AccessibilityStat
     override fun onDestroy() {
         //移除监听服务
         accessibilityManager!!.removeAccessibilityStateChangeListener(this)
-        unregisterReceiver(receiver)
+//        unregisterReceiver(receiver)
         super.onDestroy()
     }
 

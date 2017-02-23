@@ -12,6 +12,7 @@ import android.service.notification.StatusBarNotification
 import android.view.WindowManager
 import com.alphago.extensions.support
 import com.alphago.moneypacket.R
+import org.jetbrains.anko.newTask
 
 /**
  * @author Chris
@@ -30,6 +31,7 @@ class NotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
+        println("红包助手:onNotificationPosted")
         super.onNotificationPosted(sbn)
         try {
             if (packageName == sbn?.packageName) {
@@ -44,13 +46,13 @@ class NotificationListener : NotificationListenerService() {
     private fun processServiceState() {
         if (checkServiceState().not() && sp.getBoolean(getString(R.string.dont_show_again), true)) {
             handler.post {
-                val dialog = AlertDialog.Builder(this, support(24,
+                val dialog = AlertDialog.Builder(this, support(21,
                         { android.R.style.Theme_Material_Light_Dialog_NoActionBar },
                         { android.R.style.Theme_Holo_Light_Dialog_NoActionBar }))
                         .setTitle(R.string.app_name)
                         .setMessage(R.string.service_not_running)
                         .setPositiveButton(R.string.go_right_now) { dialog, which ->
-                            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).newTask())
                             dialog.dismiss()
                         }
                         .setNegativeButton(R.string.already_know) { dialog, which -> dialog.dismiss() }
@@ -72,6 +74,7 @@ class NotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
+        println("红包助手:onNotificationRemoved")
         super.onNotificationRemoved(sbn)
         processServiceState()
     }
