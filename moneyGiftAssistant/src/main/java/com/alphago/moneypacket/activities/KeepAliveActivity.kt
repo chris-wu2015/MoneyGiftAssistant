@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.widget.FrameLayout
 import com.alphago.moneypacket.utils.ScreenManager
 import org.jetbrains.anko.newTask
 
@@ -39,7 +40,10 @@ class KeepAliveActivity : AppCompatActivity() {
             }
             attributes = attrs
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         ScreenManager.setActivity(this)
     }
 

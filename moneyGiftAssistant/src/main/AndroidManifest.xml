@@ -41,6 +41,8 @@
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".activities.KeepAliveActivity"
+            android:launchMode="singleInstance"
+            android:process=":accessibility"
             android:theme="@style/TranslucentStyle">
 
         </activity>
