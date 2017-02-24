@@ -10,8 +10,8 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import android.widget.EditText
-import org.jetbrains.anko.bundleOf
 import com.alphago.moneypacket.utils.Signature
+import org.jetbrains.anko.bundleOf
 
 /**
  * @author Chris
@@ -95,7 +95,7 @@ abstract class HongBaoProcessor(val packageManager: PackageManager,
             return componentName.flattenToShortString()
         } catch (e: Exception) {
             e.printStackTrace()
-            return GENERAL_UI
+            return null
         }
     }
 

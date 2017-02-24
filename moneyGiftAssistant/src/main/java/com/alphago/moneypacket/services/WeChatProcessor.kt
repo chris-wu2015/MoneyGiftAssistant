@@ -107,11 +107,13 @@ open class WeChatProcessor(context: Context,
             }
             return
         }
-        val node2 = findOpenButton(rootNodeInfo)
-        if (judgeOpenButton(node2)) {
-            mUnpackNode = node2
-            mUnpackCount += 1
-            return
+        if (mLuckyMoneyReceived) {
+            val node2 = findOpenButton(rootNodeInfo)
+            if (judgeOpenButton(node2)) {
+                mUnpackNode = node2
+                mUnpackCount += 1
+                return
+            }
         }
 
         if (mMutex && type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
@@ -132,18 +134,21 @@ open class WeChatProcessor(context: Context,
             mMutex = true
             println("打开红包:${node.parent.getChild(0).text}")
             node.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-            mLuckyMoneyReceived = false
-            mLuckyMoneyPicked = true
+
         }
 
         if (mUnpackCount >= 1 && mUnpackNode != null) {
             handler.postDelayed({
                 try {
                     openPacket(mUnpackNode)
+                    mLuckyMoneyReceived = false
+                    mLuckyMoneyPicked = true
                 } catch (e: Exception) {
                     e.printStackTrace()
                     mMutex = false
                     mLuckyMoneyPicked = false
+                    mLuckyMoneyReceived = false
+                    mLuckyMoneyPicked = true
                     mUnpackCount = 0
                 }
             }, delay)
